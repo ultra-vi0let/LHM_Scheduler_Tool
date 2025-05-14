@@ -32,6 +32,9 @@ def get_priority_color(dj_data):
     else:
         return "blue"
 
+# Add function to Jinja globals
+app.jinja_env.globals['get_priority_color'] = get_priority_color
+
 @app.route('/')
 def index():
     performances = {}
