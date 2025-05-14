@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add DJ – LHM Scheduler Tool</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        form { max-width: 400px; margin-top: 20px; }
+        input[type="text"] { width: 100%; padding: 8px; margin: 10px 0; }
+        input[type="submit"] { padding: 10px 15px; }
+    </style>
+</head>
+<body>
+    <h1>Add New DJ</h1>
+    <form method="POST">
+        <label for="dj_name">DJ Name:</label><br>
+        <input type="text" name="dj_name" id="dj_name" required><br>
+        <input type="submit" value="Add DJ">
+    </form>
+    <p><a href="{{ url_for('index') }}">Back to Main Page</a></p>
+</body>
+</html>

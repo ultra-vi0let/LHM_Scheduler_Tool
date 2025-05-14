@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Performance – LHM Scheduler Tool</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .dj-pill {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 3px;
+            border-radius: 10px;
+            background-color: #eee;
+        }
+        .red { background-color: #f8d7da; }
+        .yellow { background-color: #fff3cd; }
+        .green { background-color: #d4edda; }
+        .blue { background-color: #cce5ff; }
+        button { margin: 5px; padding: 6px 12px; }
+    </style>
+</head>
+<body>
+    <h1>Edit Performance for {{ date }}</h1>
+    <form method="POST">
+        <h3>Current Lineup:</h3>
+        <div id="lineup">
+            {% for dj in current_lineup %}
+                <span class="dj-pill {{ get_priority_color(data[dj]) }}" onclick="removeDJ(this, '{{ dj }}')">{{ dj }}</span>
+            {% endfor %}
+        </div>
+
+        <input type="hidden" name="lineup" id="lineup_input" value="{{ ','.join(current_lineup) }}">
+
+        <label for="add_dj">Add DJ:</label>
+        <select id="add_dj">
+            {% for dj in data.keys() %}
+                {% if dj not in current_lineup %}
+                    <option value="{{ dj }}">{{ dj }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <button type="button" onclick="addDJ()">Add to Lineup</button>
+
+        <div style="margin-top: 20px;">
+            <button type="submit" name="action" value="update">Save Changes</button>
+            <button type="submit" name="action" value="delete" style="background-color: #f8d7da;">Remove Date</button>
+        </div>
+    </form>
+
+    <p><a href="{{ url_for('index') }}">Back to Main Page</a></p>
+
+<script>
+function addDJ() {
+    const select = document.getElementById('add_dj');
+    const dj = select.value;
+    if (!dj) return;
+    const pill = document.createElement('span');
+    pill.className = 'dj-pill';
+    pill.textContent = dj;
+    pill.onclick = () => removeDJ(pill, dj);
+    document.getElementById('lineup').appendChild(pill);
+
+    const current = document.getElementById('lineup_input').value.split(',').filter(Boolean);
+    if (!current.includes(dj)) current.push(dj);
+    document.getElementById('lineup_input').value = current.join(',');
+
+    select.querySelector(`option[value="${dj}"]`).remove();
+}
+
+function removeDJ(elem, dj) {
+    elem.remove();
+    const input = document.getElementById('lineup_input');
+    const values = input.value.split(',').filter(d => d !== dj);
+    input.value = values.join(',');
+}
+</script>
+
+</body>
+</html>

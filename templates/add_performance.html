@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Performance – LHM Scheduler Tool</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        form { max-width: 600px; }
+        select, input[type="date"] { width: 100%; padding: 8px; margin-top: 10px; }
+        #lineup { margin-top: 20px; padding: 10px; border: 1px solid #ccc; min-height: 50px; }
+        .dj-pill {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 3px;
+            border-radius: 10px;
+            background-color: #eee;
+        }
+        .red { background-color: #f8d7da; }
+        .yellow { background-color: #fff3cd; }
+        .green { background-color: #d4edda; }
+        .blue { background-color: #cce5ff; }
+        button { margin-top: 10px; padding: 10px 15px; }
+    </style>
+</head>
+<body>
+    <h1>Add Performance</h1>
+    <form method="POST">
+        <label for="date">Performance Date:</label>
+        <input type="date" name="date" required>
+
+        <label for="dj_select">Select DJs (double-click to add):</label>
+        <select id="dj_select" size="10">
+            {% for dj, dj_data in data.items() %}
+                {% set color = get_priority_color(dj_data) %}
+                <option value="{{ dj }}" class="{{ color }}">{{ dj }}</option>
+            {% endfor %}
+        </select>
+
+        <h3>Lineup:</h3>
+        <div id="lineup"></div>
+
+        <input type="hidden" name="lineup" id="lineup_input">
+        <button type="submit">Submit Performance</button>
+    </form>
+
+    <p><a href="{{ url_for('index') }}">Back to Main Page</a></p>
+
+<script>
+const select = document.getElementById('dj_select');
+const lineup = document.getElementById('lineup');
+const lineupInput = document.getElementById('lineup_input');
+const selectedDJs = new Set();
+
+select.ondblclick = function() {
+    const dj = select.value;
+    if (dj && !selectedDJs.has(dj)) {
+        selectedDJs.add(dj);
+        const opt = select.querySelector(`option[value="${dj}"]`);
+        const pill = document.createElement('span');
+        pill.textContent = dj;
+        pill.className = 'dj-pill ' + opt.className;
+        pill.onclick = () => {
+            selectedDJs.delete(dj);
+            lineup.removeChild(pill);
+            updateLineupInput();
+        };
+        lineup.appendChild(pill);
+        updateLineupInput();
+    }
+};
+
+function updateLineupInput() {
+    lineupInput.value = Array.from(selectedDJs).join(',');
+}
+</script>
+
+</body>
+</html>

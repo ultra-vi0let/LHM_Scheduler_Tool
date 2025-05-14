@@ -1,0 +1,10 @@
+{
+    "DJ1": {
+        "index": 1,
+        "performance_dates": ["2025-06-10", "2025-07-20"]
+    },
+    "DJ2": {
+        "index": 2,
+        "performance_dates": ["2025-05-25"]
+    }
+}

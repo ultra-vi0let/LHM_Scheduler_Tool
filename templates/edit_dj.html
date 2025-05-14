@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit DJ – LHM Scheduler Tool</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        input[type="text"], input[type="date"] { width: 100%; padding: 8px; margin: 10px 0; }
+        button { padding: 10px 15px; }
+    </style>
+</head>
+<body>
+    <h1>Edit DJ: {{ dj_name }}</h1>
+    <form method="POST">
+        <label for="dj_name">DJ Name:</label>
+        <input type="text" name="dj_name" id="dj_name" value="{{ dj_name }}" required><br>
+
+        <label for="performance_dates">Performance Dates:</label>
+        <input type="text" name="performance_dates" id="performance_dates" value="{{ ', '.join(dj_data.performance_dates) }}"><br>
+
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <p><a href="{{ url_for('index') }}">Back to Main Page</a></p>
+</body>
+</html>
