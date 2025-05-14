@@ -128,22 +128,49 @@ def load_data():
         return {}
 
 # Function to save data to the JSON file
-def save_data(data):
-    with open(DATA_FILE, 'w') as file:
-        json.dump(data, file, indent=4)
-
+# def save_data(data):
+#     with open(DATA_FILE, 'w') as file:
+#         json.dump(data, file, indent=4)
+#
+# Function to get priority color based on performance dates
+# def get_priority_color(dj_data):
+#     if not dj_data['performance_dates']:
+#         return 'blue'
+#
+#     most_recent_date = max(dj_data['performance_dates'])
+#     most_recent_date = datetime.datetime.strptime(most_recent_date, '%Y-%m-%d')
+#
+#     # Calculate time difference from the most recent performance date
+#     today = datetime.datetime.today()
+#     delta_days = (most_recent_date - today).days
+#
+#     if delta_days <= 14 and delta_days >= -14:
+#         return 'red'
+#     elif 15 <= delta_days <= 45:
+#         return 'yellow'
+#     elif 46 <= delta_days <= 90:
+#         return 'green'
+#     else:
+#         return 'blue'
 # Function to get priority color based on performance dates
 def get_priority_color(dj_data):
-    if not dj_data['performance_dates']:
-        return 'blue'
+    if not dj_data['performance_dates']:  # Check for empty performance dates
+        return 'blue'  # Default to blue when no dates are available
 
+    # Ensure there are valid performance dates
     most_recent_date = max(dj_data['performance_dates'])
-    most_recent_date = datetime.datetime.strptime(most_recent_date, '%Y-%m-%d')
+
+    # Ensure the date format is valid before parsing it
+    try:
+        most_recent_date = datetime.datetime.strptime(most_recent_date, '%Y-%m-%d')
+    except ValueError:  # If there's an invalid date format, return blue
+        return 'blue'
 
     # Calculate time difference from the most recent performance date
     today = datetime.datetime.today()
     delta_days = (most_recent_date - today).days
 
+    # Logic for color priority
     if delta_days <= 14 and delta_days >= -14:
         return 'red'
     elif 15 <= delta_days <= 45:
@@ -152,6 +179,7 @@ def get_priority_color(dj_data):
         return 'green'
     else:
         return 'blue'
+
 
 # Add function to Jinja globals
 app.jinja_env.globals['get_priority_color'] = get_priority_color
