@@ -1,1 +1,63 @@
-LHM Scheduler Tool - Test
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LHM Scheduler Tool</title>
+</head>
+<body>
+    <h1>LHM Scheduler Tool</h1>
+
+    <!-- Performance Schedule Table -->
+    <h2>Performance Schedule</h2>
+    <input type="text" id="search-performance" placeholder="Search by DJ name">
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>DJs Performing</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Table rows will be dynamically populated by Flask -->
+        </tbody>
+    </table>
+
+    <br>
+    <button><a href="/add_performance">Add Performance</a></button>
+
+    <!-- DJ Roster Table -->
+    <h2>DJ Roster</h2>
+    <input type="text" id="search-dj" placeholder="Search by DJ name">
+    <div>
+        <label>
+            <input type="checkbox" id="filter-red"> Red
+        </label>
+        <label>
+            <input type="checkbox" id="filter-yellow"> Yellow
+        </label>
+        <label>
+            <input type="checkbox" id="filter-green"> Green
+        </label>
+        <label>
+            <input type="checkbox" id="filter-blue"> Blue
+        </label>
+    </div>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>DJ Name</th>
+                <th>Most Recent Performance</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- DJ data will be populated dynamically -->
+        </tbody>
+    </table>
+
+    <br>
+    <button><a href="/add_dj">Add DJ</a></button>
+</body>
+</html>
