@@ -263,6 +263,76 @@ def add_dj():
     return render_template('add_dj.html')
 
 # Edit DJ page
+# @app.route('/edit_dj/<string:dj_name>', methods=['GET', 'POST'])
+# def edit_dj(dj_name):
+#     data = load_data()
+#
+#     if dj_name not in data:
+#         return "DJ not found."
+#
+#     if request.method == 'POST':
+#         new_name = request.form['dj_name']
+#         if new_name != dj_name:
+#             data[new_name] = data.pop(dj_name)
+#         data[new_name]['performance_dates'] = request.form.getlist('performance_dates')
+#         save_data(data)
+#         return redirect(url_for('index'))
+#
+#     # Render DJ edit page with current data
+#     dj_data = data[dj_name]
+#     return render_template('edit_dj.html', dj_name=dj_name, dj_data=dj_data)
+
+# # Edit performance page
+# @app.route('/edit_performance/<string:performance_date>', methods=['GET', 'POST'])
+# def edit_performance(performance_date):
+#     data = load_data()
+#     if request.method == 'POST':
+#         performance_date = request.form.get('performance_date', performance_date)
+#         updated_djs = request.form.getlist('djs')
+#         # Update performance dates
+#         for dj in data:
+#             if performance_date in data[dj]['performance_dates']:
+#                 if dj not in updated_djs:
+#                     data[dj]['performance_dates'].remove(performance_date)
+#             else:
+#                 if dj in updated_djs:
+#                     data[dj]['performance_dates'].append(performance_date)
+#         save_data(data)
+#         return redirect(url_for('index'))
+
+# @app.route('/edit_performance/<string:performance_date>', methods=['GET', 'POST'])
+# def edit_performance(performance_date):
+#     data = load_data()
+#
+#     if request.method == 'POST':
+#         # Ensure we get the correct field
+#         submitted_djs_raw = request.form.get('lineup', '')
+#         submitted_djs = set(map(str.strip, submitted_djs_raw.split(','))) if submitted_djs_raw else set()
+#
+#         print("Submitted DJs:", submitted_djs)
+#         print("Performance date:", performance_date)
+#
+#         for dj_name, dj_data in data.items():
+#             has_date = performance_date in dj_data['performance_dates']
+#             should_have = dj_name in submitted_djs
+#
+#             if should_have and not has_date:
+#                 dj_data['performance_dates'].append(performance_date)
+#             elif not should_have and has_date:
+#                 dj_data['performance_dates'].remove(performance_date)
+#
+#         save_data(data)
+#         return redirect(url_for('index'))
+#
+#     # Render form
+#     dj_names = list(data.keys())
+#     current_lineup = [dj for dj, info in data.items() if performance_date in info['performance_dates']]
+#     return render_template('edit_performance.html',
+#                            performance_date=performance_date,
+#                            dj_names=dj_names,
+#                            current_lineup=current_lineup,
+#                            data=data)
+
 @app.route('/edit_dj/<string:dj_name>', methods=['GET', 'POST'])
 def edit_dj(dj_name):
     data = load_data()
@@ -271,37 +341,29 @@ def edit_dj(dj_name):
         return "DJ not found."
 
     if request.method == 'POST':
-        new_name = request.form['dj_name']
+        new_name = request.form['dj_name'].strip()
+
+        # Rename if needed
         if new_name != dj_name:
+            if new_name in data:
+                return "A DJ with this name already exists."
             data[new_name] = data.pop(dj_name)
-        data[new_name]['performance_dates'] = request.form.getlist('performance_dates')
+        else:
+            new_name = dj_name  # Just to make sure it's consistent
+
+        # Handle optional performance dates update
+        if 'performance_dates' in request.form:
+            raw_dates = request.form['performance_dates'].strip()
+            if raw_dates:
+                # Clean and sort date list
+                date_list = [d.strip() for d in raw_dates.split(',') if d.strip()]
+                data[new_name]['performance_dates'] = date_list
+
         save_data(data)
         return redirect(url_for('index'))
 
-    # Render DJ edit page with current data
     dj_data = data[dj_name]
     return render_template('edit_dj.html', dj_name=dj_name, dj_data=dj_data)
-
-# Edit performance page
-@app.route('/edit_performance/<string:performance_date>', methods=['GET', 'POST'])
-def edit_performance(performance_date):
-    data = load_data()
-    if request.method == 'POST':
-        updated_djs = request.form.getlist('djs')
-        # Update performance dates
-        for dj in data:
-            if performance_date in data[dj]['performance_dates']:
-                if dj not in updated_djs:
-                    data[dj]['performance_dates'].remove(performance_date)
-            else:
-                if dj in updated_djs:
-                    data[dj]['performance_dates'].append(performance_date)
-        save_data(data)
-        return redirect(url_for('index'))
-
-    # Get DJ names for the dropdown list
-    dj_names = list(data.keys())
-    return render_template('edit_performance.html', performance_date=performance_date, dj_names=dj_names)
 
 if __name__ == '__main__':
     app.run(debug=True)
