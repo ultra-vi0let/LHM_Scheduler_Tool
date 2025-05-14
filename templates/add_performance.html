@@ -25,7 +25,7 @@
     <h1>Add Performance</h1>
     <form method="POST">
         <label for="date">Performance Date:</label>
-        <input type="date" name="date" required>
+        <input type="date" name="performance_date" required>
 
         <label for="dj_select">Select DJs (double-click to add):</label>
         <select id="dj_select" size="10">
@@ -47,7 +47,7 @@
 <script>
 const select = document.getElementById('dj_select');
 const lineup = document.getElementById('lineup');
-const lineupInput = document.getElementById('lineup_input');
+const lineup_input = document.getElementById('lineup_input');
 const selectedDJs = new Set();
 
 select.ondblclick = function() {
@@ -69,7 +69,7 @@ select.ondblclick = function() {
 };
 
 function updateLineupInput() {
-    lineupInput.value = Array.from(selectedDJs).join(',');
+    lineup_input.value = Array.from(selectedDJs).join(',');
 }
 </script>
 
